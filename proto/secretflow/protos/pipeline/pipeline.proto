@@ -18,7 +18,7 @@ package secretflow.pipeline;
 
 option java_package = "org.secretflow.proto.pipeline";
 
-import "secretflow/spec/v1/component.proto";
+//import "secretflow/spec/v1/component.proto";
 import "secretflow/spec/v1/data.proto";
 import "google/protobuf/struct.proto";
 

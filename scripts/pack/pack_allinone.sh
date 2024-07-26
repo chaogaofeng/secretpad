@@ -1,4 +1,5 @@
 #!/bin/bash
+set -ex
 #
 # Copyright 2023 Ant Group Co., Ltd.
 #
@@ -16,13 +17,13 @@
 #
 
 # shellcheck disable=SC2223
-: ${KUSCIA_IMAGE:="secretflow-registry.cn-hangzhou.cr.aliyuncs.com/secretflow/kuscia:0.10.0b0"}
-: ${SECRETPAD_IMAGE:="secretflow-registry.cn-hangzhou.cr.aliyuncs.com/secretflow/secretpad:0.9.0b0"}
-: ${SECRETFLOW_IMAGE:="secretflow-registry.cn-hangzhou.cr.aliyuncs.com/secretflow/secretflow-lite-anolis8:1.8.0b0"}
-: ${SECRETFLOW_SERVING_IMAGE:="secretflow-registry.cn-hangzhou.cr.aliyuncs.com/secretflow/serving-anolis8:0.5.0b0"}
-: ${TEE_APP_IMAGE:="secretflow/teeapps-sim-ubuntu20.04:0.1.2b0"}
-: ${TEE_DM_IMAGE:="secretflow/sf-tee-dm-sim:0.1.0b0"}
-: ${CAPSULE_MANAGER_SIM_IMAGE:="secretflow/capsule-manager-sim-ubuntu20.04:v0.1.0b0"}
+: ${KUSCIA_IMAGE:="registry.cn-hangzhou.aliyuncs.com/gmpc/kuscia:0.10.0b0"}
+: ${SECRETPAD_IMAGE:="registry.cn-hangzhou.aliyuncs.com/gmpc/gmpcpad:0.9.0b0"}
+: ${SECRETFLOW_IMAGE:="registry.cn-hangzhou.aliyuncs.com/gmpc/gmpc-lite-anolis8:1.8.0b0"}
+: ${SECRETFLOW_SERVING_IMAGE:="registry.cn-hangzhou.aliyuncs.com/gmpc/serving-anolis8:0.5.0b0"}
+: ${TEE_APP_IMAGE:="registry.cn-hangzhou.aliyuncs.com/gmpc/teeapps-sim-ubuntu20.04:0.1.2b0"}
+: ${TEE_DM_IMAGE:="registry.cn-hangzhou.aliyuncs.com/gmpc/sf-tee-dm-sim:0.1.0b0"}
+: ${CAPSULE_MANAGER_SIM_IMAGE:="registry.cn-hangzhou.aliyuncs.com/gmpc/capsule-manager-sim-ubuntu20.04:v0.1.0b0"}
 
 GREEN='\033[0;32m'
 NC='\033[0m'
@@ -51,49 +52,49 @@ fi
 echo "== start build $platform , TEE included:$NEED_TEE"
 
 # create dir
-echo "mkdir -p secretflow-allinone-package/images"
-mkdir -p secretflow-allinone-package/images
+echo "mkdir -p gmpc-allinone-package/images"
+mkdir -p gmpc-allinone-package/images
 
 # copy install.sh
 path="$(
 	cd "$(dirname "$0")"
 	pwd
 )"
-echo "cp install.sh secretflow-allinone-package/"
-cp "$path"/../install.sh secretflow-allinone-package/
+echo "cp install.sh gmpc-allinone-package/"
+cp "$path"/../install.sh gmpc-allinone-package/
 # copy uninstall.sh
-echo "cp uninstall.sh secretflow-allinone-package/"
-cp "$path"/../uninstall.sh secretflow-allinone-package/
+echo "cp uninstall.sh gmpc-allinone-package/"
+cp "$path"/../uninstall.sh gmpc-allinone-package/
 
 # remove temp data
-echo "rm -rf secretflow-allinone-package/images/*"
-rm -rf secretflow-allinone-package/images/*
+echo "rm -rf gmpc-allinone-package/images/*"
+rm -rf gmpc-allinone-package/images/*
 
 if [ "${KUSCIA_IMAGE}" == "" ]; then
-	KUSCIA_IMAGE=secretflow-registry.cn-hangzhou.cr.aliyuncs.com/secretflow/kuscia:latest
+	KUSCIA_IMAGE=registry.cn-hangzhou.aliyuncs.com/gmpc/kuscia:latest
 fi
 
 if [ "${SECRETPAD_IMAGE}" == "" ]; then
-	SECRETPAD_IMAGE=secretflow-registry.cn-hangzhou.cr.aliyuncs.com/secretflow/secretpad:latest
+	SECRETPAD_IMAGE=registry.cn-hangzhou.aliyuncs.com/gmpc/gmpcpad:latest
 fi
 
 if [ "${SECRETFLOW_IMAGE}" == "" ]; then
-	SECRETFLOW_IMAGE=secretflow-registry.cn-hangzhou.cr.aliyuncs.com/secretflow/secretflow-lite-anolis8:latest
+	SECRETFLOW_IMAGE=registry.cn-hangzhou.aliyuncs.com/gmpc/gmpc-lite-anolis8:latest
 fi
 # tee images
 if [ "${TEE_APP_IMAGE}" == "" ]; then
-	TEE_APP_IMAGE=secretflow-registry.cn-hangzhou.cr.aliyuncs.com/secretflow/teeapps-sim:latest
+	TEE_APP_IMAGE=registry.cn-hangzhou.aliyuncs.com/gmpc/teeapps-sim:latest
 fi
 
 if [ "${TEE_DM_IMAGE}" == "" ]; then
-	TEE_DM_IMAGE=secretflow-registry.cn-hangzhou.cr.aliyuncs.com/secretflow/sf-tee-dm-sim:latest
+	TEE_DM_IMAGE=registry.cn-hangzhou.aliyuncs.com/gmpc/sf-tee-dm-sim:latest
 fi
 
 if [ "${CAPSULE_MANAGER_SIM_IMAGE}" == "" ]; then
-	CAPSULE_MANAGER_SIM_IMAGE=secretflow-registry.cn-hangzhou.cr.aliyuncs.com/secretflow/capsule-manager-sim:latest
+	CAPSULE_MANAGER_SIM_IMAGE=registry.cn-hangzhou.aliyuncs.com/gmpc/capsule-manager-sim:latest
 fi
 if [ "${SECRETFLOW_SERVING_IMAGE}" == "" ]; then
-	SECRETFLOW_SERVING_IMAGE=secretflow-registry.cn-hangzhou.cr.aliyuncs.com/secretflow/serving-anolis8:latest
+	SECRETFLOW_SERVING_IMAGE=registry.cn-hangzhou.aliyuncs.com/gmpc/serving-anolis8:latest
 fi
 
 echo "kuscia image: $KUSCIA_IMAGE"
@@ -128,19 +129,19 @@ secretflowServingTag=${SECRETFLOW_SERVING_IMAGE##*:}
 echo "secretflow serving tag: $secretflowServingTag"
 
 VERSION_TAG="$(git describe --tags)"
-echo "secretflow-allinone-package tag: $VERSION_TAG"
+echo "gmpc-allinone-package tag: $VERSION_TAG"
 
-echo "docker save -o ./secretflow-allinone-package/images/kuscia-${kusciaTag}.tar ${KUSCIA_IMAGE} "
-docker save -o ./secretflow-allinone-package/images/kuscia-${kusciaTag}.tar ${KUSCIA_IMAGE}
+echo "docker save -o ./gmpc-allinone-package/images/kuscia-${kusciaTag}.tar ${KUSCIA_IMAGE} "
+docker save -o ./gmpc-allinone-package/images/kuscia-${kusciaTag}.tar ${KUSCIA_IMAGE}
 
-echo "docker save -o ./secretflow-allinone-package/images/secretpad-${secretpadTag}.tar ${SECRETPAD_IMAGE} "
-docker save -o ./secretflow-allinone-package/images/secretpad-${secretpadTag}.tar ${SECRETPAD_IMAGE}
+echo "docker save -o ./gmpc-allinone-package/images/gmpc-${secretpadTag}.tar ${SECRETPAD_IMAGE} "
+docker save -o ./gmpc-allinone-package/images/gmpc-${secretpadTag}.tar ${SECRETPAD_IMAGE}
 
-echo "docker save -o ./secretflow-allinone-package/images/secretflow-${secretflowTag}.tar ${SECRETFLOW_IMAGE} "
-docker save -o ./secretflow-allinone-package/images/secretflow-${secretflowTag}.tar ${SECRETFLOW_IMAGE}
+echo "docker save -o ./gmpc-allinone-package/images/gmpc-${secretflowTag}.tar ${SECRETFLOW_IMAGE} "
+docker save -o ./gmpc-allinone-package/images/gmpc-${secretflowTag}.tar ${SECRETFLOW_IMAGE}
 
-echo "docker save -o ./secretflow-allinone-package/images/serving-${secretflowServingTag}.tar ${SECRETFLOW_SERVING_IMAGE} "
-docker save -o ./secretflow-allinone-package/images/serving-${secretflowServingTag}.tar ${SECRETFLOW_SERVING_IMAGE}
+echo "docker save -o ./gmpc-allinone-package/images/serving-${secretflowServingTag}.tar ${SECRETFLOW_SERVING_IMAGE} "
+docker save -o ./gmpc-allinone-package/images/serving-${secretflowServingTag}.tar ${SECRETFLOW_SERVING_IMAGE}
 
 # tee
 if [ "$NEED_TEE" = "true" ]; then
@@ -168,17 +169,17 @@ if [ "$NEED_TEE" = "true" ]; then
 	capsuleManagerSimTag=${CAPSULE_MANAGER_SIM_IMAGE##*:}
 	echo "capsuleManagerSimTag: $capsuleManagerSimTag"
 
-	echo "docker save -o ./secretflow-allinone-package/images/teeapps-sim-${teeAppTag}.tar ${TEE_APP_IMAGE} "
-	docker save -o ./secretflow-allinone-package/images/teeapps-sim-${teeAppTag}.tar ${TEE_APP_IMAGE}
+	echo "docker save -o ./gmpc-allinone-package/images/teeapps-sim-${teeAppTag}.tar ${TEE_APP_IMAGE} "
+	docker save -o ./gmpc-allinone-package/images/teeapps-sim-${teeAppTag}.tar ${TEE_APP_IMAGE}
 
-	echo "docker save -o ./secretflow-allinone-package/images/sf-tee-dm-sim-${teeDmTag}.tar ${TEE_DM_IMAGE} "
-	docker save -o ./secretflow-allinone-package/images/sf-tee-dm-sim-${teeDmTag}.tar ${TEE_DM_IMAGE}
+	echo "docker save -o ./gmpc-allinone-package/images/sf-tee-dm-sim-${teeDmTag}.tar ${TEE_DM_IMAGE} "
+	docker save -o ./gmpc-allinone-package/images/sf-tee-dm-sim-${teeDmTag}.tar ${TEE_DM_IMAGE}
 
-	echo "docker save -o ./secretflow-allinone-package/image/capsule-manager-sim-${capsuleManagerSimTag}.tar ${CAPSULE_MANAGER_SIM_IMAGE} "
-	docker save -o ./secretflow-allinone-package/images/capsule-manager-sim-${capsuleManagerSimTag}.tar ${CAPSULE_MANAGER_SIM_IMAGE}
+	echo "docker save -o ./gmpc-allinone-package/image/capsule-manager-sim-${capsuleManagerSimTag}.tar ${CAPSULE_MANAGER_SIM_IMAGE} "
+	docker save -o ./gmpc-allinone-package/images/capsule-manager-sim-${capsuleManagerSimTag}.tar ${CAPSULE_MANAGER_SIM_IMAGE}
 fi
 
-echo "tar --no-xattrs -zcvf secretflow-allinone-${MVP_TAR_SUFFIX}-v${VERSION_TAG}.tar.gz ./secretflow-allinone-package"
-tar --no-xattrs -zcvf secretflow-allinone-${MVP_TAR_SUFFIX}-v"${VERSION_TAG}".tar.gz ./secretflow-allinone-package
+echo "tar --no-xattrs -zcvf gmpc-allinone-${MVP_TAR_SUFFIX}-v${VERSION_TAG}.tar.gz ./gmpc-allinone-package"
+tar --no-xattrs -zcvf gmpc-allinone-${MVP_TAR_SUFFIX}-v"${VERSION_TAG}".tar.gz ./gmpc-allinone-package
 
 echo "package done"

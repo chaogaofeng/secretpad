@@ -31,7 +31,7 @@ test: ## Run tests.
 
 .PHONY: build
 build: ## Build SecretPad binary whether to integrate frontend.
-	./scripts/build/build.sh true
+	./scripts/build/build.sh
 
 .PHONY: image
 image: build ## Build docker image with the manager.

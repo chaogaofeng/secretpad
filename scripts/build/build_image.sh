@@ -18,7 +18,7 @@
 set -e
 
 github_flag=true
-./scripts/build/build.sh ${github_flag}
+./scripts/build/build.sh
 
 DATETIME=$(date +"%Y%m%d%H%M%S")
 git fetch --tags

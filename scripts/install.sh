@@ -15,13 +15,13 @@
 # limitations under the License.
 #
 
-export KUSCIA_IMAGE="secretflow-registry.cn-hangzhou.cr.aliyuncs.com/secretflow/kuscia:0.10.0b0"
-export SECRETPAD_IMAGE="secretflow-registry.cn-hangzhou.cr.aliyuncs.com/secretflow/secretpad:0.9.0b0"
-export SECRETFLOW_IMAGE="secretflow-registry.cn-hangzhou.cr.aliyuncs.com/secretflow/secretflow-lite-anolis8:1.8.0b0"
-export SECRETFLOW_SERVING_IMAGE="secretflow-registry.cn-hangzhou.cr.aliyuncs.com/secretflow/serving-anolis8:0.5.0b0"
-export TEE_APP_IMAGE="secretflow/teeapps-sim-ubuntu20.04:0.1.2b0"
-export TEE_DM_IMAGE="secretflow/sf-tee-dm-sim:0.1.0b0"
-export CAPSULE_MANAGER_SIM_IMAGE="secretflow/capsule-manager-sim-ubuntu20.04:v0.1.0b0"
+export KUSCIA_IMAGE="registry.cn-hangzhou.aliyuncs.com/gmpc/kuscia:0.10.0b0"
+export SECRETPAD_IMAGE="registry.cn-hangzhou.aliyuncs.com/gmpc/gmpcpad:0.9.0b0"
+export SECRETFLOW_IMAGE="registry.cn-hangzhou.aliyuncs.com/gmpc/gmpc-lite-anolis8:1.8.0b0"
+export SECRETFLOW_SERVING_IMAGE="registry.cn-hangzhou.aliyuncs.com/gmpc/serving-anolis8:0.5.0b0"
+export TEE_APP_IMAGE="registry.cn-hangzhou.aliyuncs.com/gmpc/teeapps-sim-ubuntu20.04:0.1.2b0"
+export TEE_DM_IMAGE="registry.cn-hangzhou.aliyuncs.com/gmpc/sf-tee-dm-sim:0.1.0b0"
+export CAPSULE_MANAGER_SIM_IMAGE="registry.cn-hangzhou.aliyuncs.com/gmpc/capsule-manager-sim-ubuntu20.04:v0.1.0b0"
 
 # MPC TEE ALL-IN-ONE
 export DEPLOY_MODE="ALL-IN-ONE"
@@ -42,11 +42,11 @@ NETWORK_MODE:
 lite OPTIONS:
     -m              [optional]  (Only used in lite mode)The master endpoint.
     -n              [optional]  Domain id to be deployed.
-    -s              [optional]  The port exposed by secretpad-web, default 8080
+    -s              [optional]  The port exposed by gmpc-web, default 8080
     -p              [optional]  The port exposed by kuscia-gateway, default 18080
     -k              [optional]  The port exposed by kuscia-api-http, default 18082
     -g              [optional]  The port exposed by kuscia-api-grpc, default 18083
-    -t              [optional]  (Only used in lite mode)The deploy token, get this token from secretpad platform.
+    -t              [optional]  (Only used in lite mode)The deploy token, get this token from gmpcpad platform.
     -d              [optional]  The install directory. Default is ${INSTALL_DIR}.
     -P              [optional]  kuscia protocol. Default is ${KUSCIA_PROTOCOL}.
     -q              [optional]  (Only used in autonomy or lite mode)The port exposed for internal use by domain. You can set Env 'DOMAIN_HOST_INTERNAL_PORT' instead default 13081.
@@ -240,9 +240,9 @@ function init_images_from_files() {
 			image=$(echo "${imageInfo}" | sed "s/Loaded image: //")
 			if [[ $image == *kuscia* ]]; then
 				export KUSCIA_IMAGE=$image
-			elif [[ $image == *secretpad* ]]; then
+			elif [[ $image == *gmpcpad* ]]; then
 				export SECRETPAD_IMAGE=$image
-			elif [[ $image == *secretflow-lite* ]]; then
+			elif [[ $image == *gmpc-lite* ]]; then
 				export SECRETFLOW_IMAGE=$image
 			elif [[ $image == *sf-tee-dm-sim* ]]; then
 				export TEE_DM_IMAGE=$image
